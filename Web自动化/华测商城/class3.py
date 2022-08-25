@@ -1,3 +1,5 @@
+import random
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.relative_locator import locate_with, with_tag_name
@@ -18,7 +20,9 @@ from 华测商城.common import random_
 """
 
 driver = webdriver.Chrome()
+driver.maximize_window()
 driver.get("http://shop-xo.hctestedu.com/")
+
 driver.implicitly_wait(3)
 
 
@@ -36,22 +40,46 @@ def user_register(dr, time_out, cz):
 
 # 获取注册按钮 并点击
 element_locate = (By.LINK_TEXT, "注册")
-ele1 = user_register(driver, 3, element_locate)
-ele1.click()
+resister_btn = user_register(driver, 3, element_locate)
+resister_btn.click()
 
 password = username = random_.time_ran()
 
 # 输入用户名
 user_info = (By.NAME, "accounts")
-user_info_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(user_info))
+user_info_ele = user_register(driver, 3, user_info)
+# user_info_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(user_info))
 user_info_ele.send_keys(username)
 
 # 输入密码
 password_info = (By.NAME, "pwd")
-password_info_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(password_info))
+password_info_ele = user_register(driver, 3, password_info)
+# password_info_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(password_info))
 password_info_ele.send_keys(password)
 
 # 点击注册按钮
 register_btn = (By.CLASS_NAME, "btn-loading-example")
-register_btn_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(register_btn))
+register_btn_ele = user_register(driver, 3, register_btn)
+# register_btn_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(register_btn))
 register_btn_ele.click()
+
+good_list = driver.find_element(By.CLASS_NAME, "goods-list")
+good_hrefs = good_list.find_elements(By.TAG_NAME, "a")
+# for i in good_hrefs:
+#     i.get_attribute("href")
+# driver.get(good_hrefs[random.randint(0, len(good_hrefs) - 1)].get_attribute("href"))
+driver.get("http://shop-xo.hctestedu.com/index.php?s=/index/goods/index/id/9.html")
+
+theme_options = driver.find_elements(By.CSS_SELECTOR, ".theme-options")  # 所有商品属性选项
+# for i in theme_options:
+#     if ""
+
+
+# print(len(div_list))
+
+# sku_items = driver.find_element(By.XPATH,
+#                                 '/html/body/div[4]/div[2]/div[2]/div/div[2]/dl/dd/div[2]/div[3]/form/div[1]/div[1]/ul')
+# lis = sku_items.find_elements(By.TAG_NAME, "li")
+# for i in range(len(lis)):
+#     index = random.randint(0, 2)
+#     lis[index].click()
