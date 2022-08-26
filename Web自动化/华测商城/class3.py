@@ -70,9 +70,16 @@ good_hrefs = good_list.find_elements(By.TAG_NAME, "a")
 # driver.get(good_hrefs[random.randint(0, len(good_hrefs) - 1)].get_attribute("href"))
 driver.get("http://shop-xo.hctestedu.com/index.php?s=/index/goods/index/id/9.html")
 
-theme_options = driver.find_elements(By.CSS_SELECTOR, ".theme-options")  # 所有商品属性选项
-# for i in theme_options:
-#     if ""
+theme_option = (By.CSS_SELECTOR, ".theme-options")  # 所有商品属性选项
+theme_options = WebDriverWait(driver, 5).until(expected_conditions.visibility_of_all_elements_located(theme_option))
+
+for i in theme_options:
+    if "sku-items" in i.get_attribute("class"):
+        sku_color = (By.CSS_SELECTOR, "ul>li")
+        sku_element = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_all_elements_located(sku_color))
+        randint = random.randint(0, len(sku_element) - 1)
+        sku_element[randint].click()
+
 
 
 # print(len(div_list))
