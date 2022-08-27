@@ -1,10 +1,11 @@
 import random
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.relative_locator import locate_with, with_tag_name
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait as Wait
+from selenium.webdriver.support import expected_conditions as EC
 
 from 华测商城.common import random_
 
@@ -34,8 +35,36 @@ def user_register(dr, time_out, cz):
     :param cz: 操作方式
     :return: 元素对象
     """
-    element = WebDriverWait(dr, time_out).until(expected_conditions.presence_of_element_located(cz))
+    element = Wait(dr, time_out).until(EC.presence_of_element_located(cz))
     return element
+
+
+def add_shop(goods, good_num):
+    """
+
+    :param goods: 商品属性列表
+    :param good_num: 商品数量
+    :return:
+    """
+    for i in goods: # 遍历所有商品属性
+        # 如果存在 sku-items，则说明商品属性有下级选项，否则说明没有下级选项
+        if "sku-items" in i.get_attribute("class") and Wait(driver, 3).until(EC.visibility_of(i)):
+            # 遍历下级选项
+            while True:
+                value = (By.CSS_SELECTOR, "ul>li")
+                selected_located = (By.CSS_SELECTOR, ".theme-options>ul>li.selected")
+                sku_items = i.find_elements(*value) # 定位下级选项列表
+                randint = random.randint(0, len(sku_items) - 1)
+                sku_element = sku_items[randint] # 随机生成一个下级元素
+                if "sku-items-disabled" not in sku_element.get_attribute("class"): # 如果sku-items-disabled属性不在下级元素属性里此元素说明可以点击
+                    sku_element.click()
+                    global theme_options
+                    theme_options = Wait(driver, 3).until(EC.visibility_of_all_elements_located(selected_located)) # 刷新页面已选择的元素
+                    break
+        else:
+            i.find_element(By.TAG_NAME, "input").send_keys(good_num)
+    driver.find_element(By.CSS_SELECTOR, ".cart-submit").click()
+    return "添加成功"
 
 
 # 获取注册按钮 并点击
@@ -48,45 +77,31 @@ password = username = random_.time_ran()
 # 输入用户名
 user_info = (By.NAME, "accounts")
 user_info_ele = user_register(driver, 3, user_info)
-# user_info_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(user_info))
+# user_info_ele = Wait(driver, 3).until(EC.presence_of_element_located(user_info))
 user_info_ele.send_keys(username)
 
 # 输入密码
 password_info = (By.NAME, "pwd")
 password_info_ele = user_register(driver, 3, password_info)
-# password_info_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(password_info))
+# password_info_ele = Wait(driver, 3).until(EC.presence_of_element_located(password_info))
 password_info_ele.send_keys(password)
 
 # 点击注册按钮
 register_btn = (By.CLASS_NAME, "btn-loading-example")
 register_btn_ele = user_register(driver, 3, register_btn)
-# register_btn_ele = WebDriverWait(driver, 3).until(expected_conditions.presence_of_element_located(register_btn))
+# register_btn_ele = Wait(driver, 3).until(EC.presence_of_element_located(register_btn))
 register_btn_ele.click()
 
+# 获取首页商品链接
 good_list = driver.find_element(By.CLASS_NAME, "goods-list")
 good_hrefs = good_list.find_elements(By.TAG_NAME, "a")
-# for i in good_hrefs:
-#     i.get_attribute("href")
-# driver.get(good_hrefs[random.randint(0, len(good_hrefs) - 1)].get_attribute("href"))
-driver.get("http://shop-xo.hctestedu.com/index.php?s=/index/goods/index/id/9.html")
+for i in good_hrefs:
+    i.get_attribute("href")
+driver.get(good_hrefs[random.randint(0, len(good_hrefs) - 1)].get_attribute("href"))
 
-theme_option = (By.CSS_SELECTOR, ".theme-options")  # 所有商品属性选项
-theme_options = WebDriverWait(driver, 5).until(expected_conditions.visibility_of_all_elements_located(theme_option))
+# driver.get("http://shop-xo.hctestedu.com/index.php?s=/index/goods/index/id/9.html")
+# 定位获取所有商品属性
+theme_option = (By.CSS_SELECTOR, ".theme-options")
+theme_options = Wait(driver, 3).until(EC.visibility_of_all_elements_located(theme_option))
+add_shop(theme_options, 10)
 
-for i in theme_options:
-    if "sku-items" in i.get_attribute("class"):
-        sku_color = (By.CSS_SELECTOR, "ul>li")
-        sku_element = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_all_elements_located(sku_color))
-        randint = random.randint(0, len(sku_element) - 1)
-        sku_element[randint].click()
-
-
-
-# print(len(div_list))
-
-# sku_items = driver.find_element(By.XPATH,
-#                                 '/html/body/div[4]/div[2]/div[2]/div/div[2]/dl/dd/div[2]/div[3]/form/div[1]/div[1]/ul')
-# lis = sku_items.find_elements(By.TAG_NAME, "li")
-# for i in range(len(lis)):
-#     index = random.randint(0, 2)
-#     lis[index].click()
