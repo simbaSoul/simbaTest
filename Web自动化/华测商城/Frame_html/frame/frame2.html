@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>frame2</title>
+    <script type="text/javascript">
+        function display_alert() {
+            confirm("第一步：要先确定元素所在的frame是哪个")
+        }
+    </script>
+
+</head>
+<body>
+<div>
+    <h3>第二步，请点击下面的按钮，然后打印获取弹窗里面的内容，并关闭弹窗</h3>
+    <button id="alert" value="alert" type="button" onclick="alert('如果发现需要定位的元素存在于frame中');">请点击我</button>
+    <h3>第三步，请点击下面的按钮，并获取打开后页面中的内容</h3>
+    <button id="confirm" onclick="display_alert()">请点击我</button>
+    <iframe name="frame3" src="frame3.html" frameborder="0" width="100%" height="600"></iframe>
+</div>
+
+</body>
+</html>

@@ -22,6 +22,7 @@ from 华测商城.common import random_
 
 driver = webdriver.Chrome()
 driver.maximize_window()
+
 driver.get("http://shop-xo.hctestedu.com/")
 
 driver.implicitly_wait(3)
@@ -46,20 +47,22 @@ def add_shop(goods, good_num):
     :param good_num: 商品数量
     :return:
     """
-    for i in goods: # 遍历所有商品属性
+    for i in goods:  # 遍历所有商品属性
         # 如果存在 sku-items，则说明商品属性有下级选项，否则说明没有下级选项
         if "sku-items" in i.get_attribute("class") and Wait(driver, 3).until(EC.visibility_of(i)):
             # 遍历下级选项
             while True:
                 value = (By.CSS_SELECTOR, "ul>li")
                 selected_located = (By.CSS_SELECTOR, ".theme-options>ul>li.selected")
-                sku_items = i.find_elements(*value) # 定位下级选项列表
+                sku_items = i.find_elements(*value)  # 定位下级选项列表
                 randint = random.randint(0, len(sku_items) - 1)
-                sku_element = sku_items[randint] # 随机生成一个下级元素
-                if "sku-items-disabled" not in sku_element.get_attribute("class"): # 如果sku-items-disabled属性不在下级元素属性里此元素说明可以点击
+                sku_element = sku_items[randint]  # 随机生成一个下级元素
+                if "sku-items-disabled" not in sku_element.get_attribute(
+                        "class"):  # 如果sku-items-disabled属性不在下级元素属性里此元素说明可以点击
                     sku_element.click()
                     global theme_options
-                    theme_options = Wait(driver, 3).until(EC.visibility_of_all_elements_located(selected_located)) # 刷新页面已选择的元素
+                    theme_options = Wait(driver, 3).until(
+                        EC.visibility_of_all_elements_located(selected_located))  # 刷新页面已选择的元素
                     break
         else:
             i.find_element(By.TAG_NAME, "input").send_keys(good_num)
@@ -105,3 +108,24 @@ theme_option = (By.CSS_SELECTOR, ".theme-options")
 theme_options = Wait(driver, 3).until(EC.visibility_of_all_elements_located(theme_option))
 add_shop(theme_options, 10)
 
+cz = (By.XPATH, '//span[text()="个人中心"]')
+
+grzx = user_register(driver, 2, cz)
+grzx.click()
+cz = (By.CLASS_NAME, "am-icon-edit")
+xgzl = user_register(driver, 2, cz)
+xgzl.click()
+
+cz = (By.XPATH, '//a[text()=" 编辑"]')
+bj = user_register(driver, 2, cz)
+bj.click()
+
+sr = (By.NAME, "birthday")
+srl = user_register(driver, 2, sr)
+srl.click()
+
+fr = (By.XPATH, "/html/body/div[7]/iframe")
+frs = driver.find_element(*fr) # 定位frame
+driver.switch_to.frame(frs) # 切换到frame
+driver.find_element(By.XPATH, "/html/body/div/div[3]/table/tbody/tr[3]/td[2]").click()
+driver.switch_to.parent_frame() # 操作完要释放frame
