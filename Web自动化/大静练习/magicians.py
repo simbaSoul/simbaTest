@@ -101,6 +101,56 @@
 # print(a[0:15])
 
 # 元组
-a = (100, 200)
-print(a[0])
-print(a[1])
+# a = (100, 200)
+# print(a[0])
+# print(a[1])
+# 自助餐练习
+# a = ('披萨','榴莲','鸡腿','火腿','莎拉')
+# for i in a:
+#     print(i)
+#
+# a = ('腊肠','鸡蛋')
+# for i in a:
+#     print(i)
+
+# if语句
+
+# a = ['audi', 'bmw', 'subaru', 'toyota']
+# for i in a:
+#     if a == 'bmw':
+#         print(i.upper())
+#     else:
+#         print(i.title())
+#
+# age = 19
+# if age >=18:
+#     print("haobang")
+#     print("jiayou")
+
+# age = 17
+# if age >= 18:
+#     print("haobangya")
+# else:
+#     print("对不起，年龄不符")
+
+# age = int(input("请输入你的年龄："))
+# if age < 4:
+#     print("四岁以下免费")
+# elif age < 18:
+#     print("收费25元")
+# else:
+#     print("收费40元")
+
+a = ['green']
+# for i in a:
+#     if i == 'bull':
+#         print("玩家获得分5")
+#     else:
+#         print()
+for i in a:
+    if i =='green':
+        print("玩家获得5分")
+    if i != 'green':
+        print("玩家获得10分")
+    else:
+        print("玩家获得15分")
